@@ -1,8 +1,8 @@
 # Order Book Widget App Architecture
 
+(App is live at https://alex1100.github.io/order-book-widget/)
+
 https://github.com/user-attachments/assets/6aefaa2c-78c4-42c7-8147-99f0fdb1e5f4
-
-
 
 ## Overview
 
