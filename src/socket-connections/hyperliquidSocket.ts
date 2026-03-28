@@ -22,6 +22,10 @@ export function createHyperliquidSocket(): SocketController {
     isInitialSnapshot = true;
 
     if (ws) {
+      ws.onopen = null;
+      ws.onmessage = null;
+      ws.onerror = null;
+      ws.onclose = null;
       ws.close();
       ws = null;
     }
@@ -86,6 +90,10 @@ export function createHyperliquidSocket(): SocketController {
 
   const disconnect = () => {
     if (ws) {
+      ws.onopen = null;
+      ws.onmessage = null;
+      ws.onerror = null;
+      ws.onclose = null;
       ws.close();
       ws = null;
     }

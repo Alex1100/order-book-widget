@@ -3,13 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://alex1100.github.io/order-book-widget/",
   "scripts": {
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint-fix": "eslint . --fix"
+    "lint-fix": "eslint . --fix",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@mantine/core": "^8.3.18",
@@ -31,6 +34,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "gh-pages": "^6.3.0",
     "globals": "^17.4.0",
     "prettier": "3.8.1",
     "typescript": "~5.9.3",
