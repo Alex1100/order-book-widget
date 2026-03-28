@@ -14,10 +14,11 @@ function App() {
   const [currentSymbol, setCurrentSymbol] = useState('BTC');
   const [nSigFigs, setNSigFigs] = useState(5);
   const [grouping, setGrouping] = useState(1);
+  const [visibleLevels, setVisibleLevels] = useState(12);
   const [animateOrderBook, setAnimateOrderBook] = useState(true);
   const computedColorScheme = useComputedColorScheme('dark', { getInitialValueInEffect: true });
 
-  useOrderBookController(currentSymbol, nSigFigs, grouping);
+  useOrderBookController({ symbol: currentSymbol, nSigFigs, grouping, visibleLevels });
 
   const snapshot = useOrderBook();
 
@@ -46,6 +47,8 @@ function App() {
           setGrouping={setGrouping}
           nSigFigs={nSigFigs}
           setNSigFigs={setNSigFigs}
+          visibleLevels={visibleLevels}
+          setVisibleLevels={setVisibleLevels}
           currentSymbol={currentSymbol}
           snapshot={snapshot}
           setCurrentSymbol={setCurrentSymbol}

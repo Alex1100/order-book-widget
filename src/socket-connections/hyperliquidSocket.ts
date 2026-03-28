@@ -2,7 +2,12 @@ import { orderBookStore } from '../stores/orderBookStore';
 import type { HyperliquidBookMessage } from '../types/orderBookTypes';
 
 type SocketController = {
-  connect: (symbol: string, nSigFigs: number, grouping: number) => void;
+  connect: (params: {
+    symbol: string;
+    nSigFigs: number;
+    grouping: number;
+    visibleLevels: number;
+  }) => void;
   disconnect: () => void;
 };
 
@@ -14,11 +19,19 @@ export function createHyperliquidSocket(): SocketController {
   let currentNSigFigs = 5;
   let currentGrouping = 1;
   let isInitialSnapshot = true;
+  let currentVisibleLevels = 12;
 
-  const connect = (symbol: string, nSigFigs: number, grouping: number) => {
+  const connect = (params: {
+    symbol: string;
+    nSigFigs: number;
+    grouping: number;
+    visibleLevels: number;
+  }) => {
+    const { symbol, nSigFigs, grouping, visibleLevels } = params;
     currentSymbol = symbol;
     currentNSigFigs = nSigFigs;
     currentGrouping = grouping;
+    currentVisibleLevels = visibleLevels;
     isInitialSnapshot = true;
 
     if (ws) {
@@ -31,7 +44,7 @@ export function createHyperliquidSocket(): SocketController {
     }
 
     orderBookStore.resetBook();
-    orderBookStore.setConfig({ symbol, nSigFigs, grouping });
+    orderBookStore.setConfig({ symbol, nSigFigs, grouping, visibleLevels });
     orderBookStore.setConnectionStatus(false);
 
     ws = new WebSocket(WS_URL);
@@ -46,6 +59,7 @@ export function createHyperliquidSocket(): SocketController {
             coin: currentSymbol,
             nSigFigs: currentNSigFigs,
             grouping: currentGrouping,
+            visibleLevels: currentVisibleLevels,
           },
         }),
       );

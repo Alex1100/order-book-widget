@@ -3,16 +3,18 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconMenu2 } from '@tabler/icons-react';
 import { useState } from 'react';
 
-import { GroupingOptions,NSigFigOptions } from '../utils/constants';
+import { GroupingOptions, NSigFigOptions, VisibleLevelsOptions } from '../utils/constants';
 import { GranularityControl } from './GranularityControl';
 
 export interface OrderBookGranularityControlsProps {
   currentSymbol: string;
   nSigFigs: number;
   grouping: number;
+  visibleLevels: number;
   setCurrentSymbol: React.Dispatch<React.SetStateAction<string>>;
   setNSigFigs: React.Dispatch<React.SetStateAction<number>>;
   setGrouping: React.Dispatch<React.SetStateAction<number>>;
+  setVisibleLevels: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const OrderBookGranularityControls = ({
@@ -20,6 +22,8 @@ export const OrderBookGranularityControls = ({
   setNSigFigs,
   grouping,
   setGrouping,
+  visibleLevels,
+  setVisibleLevels,
 }: OrderBookGranularityControlsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpened, { close, toggle }] = useDisclosure(false);
@@ -85,6 +89,22 @@ export const OrderBookGranularityControls = ({
               options={GroupingOptions}
               handleChange={(value: number) => {
                 setGrouping(value);
+                setIsOpen(false);
+                close();
+              }}
+              setIsOpen={setIsOpen}
+              isOpen={isOpen}
+            />
+            <GranularityControl
+              label={'Levels'}
+              selectClassName={'levels-select goldenrod-color'}
+              rootContainerClassNames="flex fd-col"
+              tooltipLabel={'Number of price levels shown per side of the order book.'}
+              iconProps={{ width: '70%', height: '70%' }}
+              granularityValue={visibleLevels}
+              options={VisibleLevelsOptions}
+              handleChange={(value: number) => {
+                setVisibleLevels(value);
                 setIsOpen(false);
                 close();
               }}

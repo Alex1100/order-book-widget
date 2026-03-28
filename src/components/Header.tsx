@@ -67,6 +67,8 @@ export const Header = ({
   nSigFigs,
   grouping,
   setGrouping,
+  visibleLevels,
+  setVisibleLevels,
 }: HeaderProps) => {
   const currentAssetIcon = AssetIconMap[currentSymbol];
 
@@ -120,6 +122,8 @@ export const Header = ({
           currentSymbol={currentSymbol}
           setCurrentSymbol={setCurrentSymbol}
           setNSigFigs={setNSigFigs}
+          visibleLevels={visibleLevels}
+          setVisibleLevels={setVisibleLevels}
           nSigFigs={nSigFigs}
           grouping={grouping}
           setGrouping={setGrouping}
@@ -198,6 +202,8 @@ export const Header = ({
         nSigFigs={nSigFigs}
         grouping={grouping}
         setGrouping={setGrouping}
+        visibleLevels={visibleLevels}
+        setVisibleLevels={setVisibleLevels}
       />
     </Container>
   );

@@ -30,6 +30,7 @@ export const GranularityControl = ({
   iconProps = { width: '70%', height: '70%' },
 }: GranularityControlProps) => {
   const { width, height } = iconProps;
+
   return (
     <Container className={rootContainerClassNames}>
       <Container className="flex align-itm-ctr goldenrod-color">
@@ -48,7 +49,7 @@ export const GranularityControl = ({
       </Container>
       <Select
         className={selectClassName}
-        value={granularityValue.toString()}
+        value={granularityValue ? granularityValue.toString() : ''}
         data={options}
         onChange={(value) => {
           handleChange(Number(value));
