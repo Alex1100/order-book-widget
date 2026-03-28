@@ -3,9 +3,7 @@ import type {
   OrderBookConfig,
   OrderBookSnapshot,
   RawLevel,
-} from "./types";
-import {isEqual} from 'lodash';
-
+} from "../types/orderBookTypes";
 type Listener = () => void;
 
 function roundToSigFigs(value: number, sigFigs: number): number {
@@ -18,10 +16,6 @@ function roundToStep(price: number, step: number, side: "bid" | "ask"): number {
   const units = price / step;
   const roundedUnits = side === "bid" ? Math.floor(units + 1e-9) : Math.ceil(units - 1e-9);
   return roundedUnits * step;
-}
-
-function snapshotsEqual(a: OrderBookSnapshot, b: OrderBookSnapshot): boolean {
-  return isEqual(a, b);
 }
 
 export class OrderBookStore {
@@ -147,7 +141,7 @@ private addFlashIndicators(
     if (this.scheduled) return;
     this.scheduled = true;
 
-    requestAnimationFrame(() => {
+    queueMicrotask(() => {
       this.scheduled = false;
       this.publish();
     });
@@ -161,9 +155,9 @@ private addFlashIndicators(
     const bidsWithFlash = this.addFlashIndicators(bids, this.previousBids, "bids");
     const asksWithFlash = this.addFlashIndicators(asks, this.previousAsks, "asks");
 
-    // Store current levels for next comparison
-    this.previousBids = new Map(this.bids);
-    this.previousAsks = new Map(this.asks);
+    // Store only the visible grouped levels for next comparison
+    this.previousBids = new Map(bids.map(l => [l.price, l.size]));
+    this.previousAsks = new Map(asks.map(l => [l.price, l.size]));
 
     const bestBid = bids[0]?.price ?? null;
     const bestAsk = asks[0]?.price ?? null;
@@ -188,31 +182,7 @@ private addFlashIndicators(
       isConnected: this.isConnected,
     };
 
-    const same = snapshotsEqual(this.snapshot, nextSnapshot);
-
-    if (same) return;
-
     this.snapshot = nextSnapshot;
-    this.listeners.forEach((listener) => listener());
-
-    // Clear flash indicators after animation
-    setTimeout(() => {
-      this.clearFlashIndicators();
-    }, 300);
-  }
-
-
-
-  private clearFlashIndicators() {
-    const clearedBids = this.snapshot.bids.map(level => ({ ...level, flash: null }));
-    const clearedAsks = this.snapshot.asks.map(level => ({ ...level, flash: null }));
-
-    this.snapshot = {
-      ...this.snapshot,
-      bids: clearedBids,
-      asks: clearedAsks,
-    };
-
     this.listeners.forEach((listener) => listener());
   }
 

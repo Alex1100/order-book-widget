@@ -1,8 +1,8 @@
 import React from "react";
-import { formatPrice } from "../orderbook/format";
+import { formatPrice } from "../utils/format";
 import { Container } from '@mantine/core';
 
-type Props = {
+type SpreadRowProps = {
   spread: number | null;
   mid: number | null;
 };
@@ -10,7 +10,7 @@ type Props = {
 export const SpreadRow = React.memo(function SpreadRow({
   spread,
   mid,
-}: Props) {
+}: SpreadRowProps) {
   return (
     <Container className="spread">
       <span>Spread</span>

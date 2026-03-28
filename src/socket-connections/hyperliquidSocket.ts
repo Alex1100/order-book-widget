@@ -1,5 +1,5 @@
-import { orderBookStore } from "./orderBookStore";
-import type { HyperliquidBookMessage } from "./types";
+import { orderBookStore } from "../stores/orderBookStore";
+import type { HyperliquidBookMessage } from "../types/orderBookTypes";
 
 type SocketController = {
   connect: (symbol: string, nSigFigs: number, grouping: number) => void;
@@ -29,7 +29,6 @@ export function createHyperliquidSocket(): SocketController {
     orderBookStore.setConnectionStatus(false);
 
     ws = new WebSocket(WS_URL);
-
     ws.onopen = () => {
       orderBookStore.setConnectionStatus(true);
 

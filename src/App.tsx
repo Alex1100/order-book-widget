@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react';
-import './App.css';
-import { OrderBook } from './components/OrderBook'
 import { Container } from '@mantine/core';
-import { useOrderBook } from './orderbook/useOrderBook';
-import { useOrderBookController } from './orderbook/useOrderBookController';
+import { useMemo, useState } from 'react';
 import { Header } from './components/Header';
+import { OrderBook } from './components/OrderBook'
+import { useOrderBook } from './hooks/useOrderBook';
+import { useOrderBookController } from './hooks/useOrderBookController';
+import './App.css';
 
 function App() {
   const [currentSymbol, setCurrentSymbol] = useState("BTC");
@@ -22,17 +22,17 @@ function App() {
   return (
     <>
       <Container className="card" size="lg">
-        <Header {...{
-          animateOrderBook,
-          setAnimateOrderBook,
-          grouping,
-          setGrouping,
-          nSigFigs,
-          setNSigFigs,
-          currentSymbol,
-          snapshot,
-          setCurrentSymbol,
-        }}/>
+        <Header 
+          animateOrderBook={animateOrderBook}
+          setAnimateOrderBook={setAnimateOrderBook}
+          grouping={grouping}
+          setGrouping={setGrouping}
+          nSigFigs={nSigFigs}
+          setNSigFigs={setNSigFigs}
+          currentSymbol={currentSymbol}
+          snapshot={snapshot}
+          setCurrentSymbol={setCurrentSymbol}
+        />
         <OrderBook asks={asks} bids={bids} snapshot={snapshot} animate={animateOrderBook} />
       </Container>
     </>

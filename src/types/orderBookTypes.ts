@@ -1,5 +1,5 @@
 export type Side = "bids" | "asks";
-
+export type OrderSide = "bid" | "ask";
 export type RawLevel = {px: string, sz: string; };
 
 export type Flash = "up" | "down" | null;

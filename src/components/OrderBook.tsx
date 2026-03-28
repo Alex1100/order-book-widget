@@ -1,7 +1,8 @@
-import type { BookLevel, OrderBookSnapshot } from "../orderbook/types";
+import { Container } from '@mantine/core';
+
 import { OrderBookRow } from "./OrderRow";
 import { SpreadRow } from "./SpreadRow";
-import { Container } from '@mantine/core';
+import type { BookLevel, OrderBookSnapshot } from "../types/orderBookTypes";
 
 interface OrderBookProps {
   asks: BookLevel[];
@@ -9,7 +10,6 @@ interface OrderBookProps {
   snapshot: OrderBookSnapshot;
   animate?: boolean;
 };
-
 
 export function OrderBook({asks, bids, snapshot, animate = true}: OrderBookProps) {
   return (

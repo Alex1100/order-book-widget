@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { orderBookStore } from "./orderBookStore";
+import { orderBookStore } from "../stores/orderBookStore";
 
 export function useOrderBook() {
   return useSyncExternalStore(
