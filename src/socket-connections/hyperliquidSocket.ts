@@ -1,22 +1,24 @@
-import { orderBookStore } from "../stores/orderBookStore";
-import type { HyperliquidBookMessage } from "../types/orderBookTypes";
+import { orderBookStore } from '../stores/orderBookStore';
+import type { HyperliquidBookMessage } from '../types/orderBookTypes';
 
 type SocketController = {
   connect: (symbol: string, nSigFigs: number, grouping: number) => void;
   disconnect: () => void;
 };
 
-const WS_URL = "wss://api.hyperliquid.xyz/ws";
+const WS_URL = 'wss://api.hyperliquid.xyz/ws';
 
 export function createHyperliquidSocket(): SocketController {
   let ws: WebSocket | null = null;
-  let currentSymbol = "BTC";
+  let currentSymbol = 'BTC';
   let currentNSigFigs = 5;
+  let currentGrouping = 1;
   let isInitialSnapshot = true;
 
   const connect = (symbol: string, nSigFigs: number, grouping: number) => {
     currentSymbol = symbol;
     currentNSigFigs = nSigFigs;
+    currentGrouping = grouping;
     isInitialSnapshot = true;
 
     if (ws) {
@@ -34,11 +36,12 @@ export function createHyperliquidSocket(): SocketController {
 
       ws?.send(
         JSON.stringify({
-          method: "subscribe",
+          method: 'subscribe',
           subscription: {
-            type: "l2Book",
+            type: 'l2Book',
             coin: currentSymbol,
             nSigFigs: currentNSigFigs,
+            grouping: currentGrouping,
           },
         }),
       );
@@ -49,11 +52,11 @@ export function createHyperliquidSocket(): SocketController {
         const msg = JSON.parse(event.data) as HyperliquidBookMessage | Record<string, unknown>;
 
         if (
-          typeof msg === "object" &&
+          typeof msg === 'object' &&
           msg !== null &&
-          "channel" in msg &&
-          msg.channel === "l2Book" &&
-          "data" in msg
+          'channel' in msg &&
+          msg.channel === 'l2Book' &&
+          'data' in msg
         ) {
           const bookMsg = msg as HyperliquidBookMessage;
           if (bookMsg.data.coin !== currentSymbol) return;
@@ -68,7 +71,7 @@ export function createHyperliquidSocket(): SocketController {
           }
         }
       } catch (error) {
-        console.error("Failed to parse websocket message", error);
+        console.error('Failed to parse websocket message', error);
       }
     };
 

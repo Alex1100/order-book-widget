@@ -1,12 +1,26 @@
-import { Container, Switch, Text, ThemeIcon, Tooltip, Image, Select, Group, type SelectProps } from '@mantine/core';
+import {
+  Container,
+  Group,
+  Image,
+  Select,
+  type SelectProps,
+  Switch,
+  Text,
+  ThemeIcon,
+  Tooltip,
+} from '@mantine/core';
 import { IconChevronDown, IconChevronUp, IconHelpFilled } from '@tabler/icons-react';
-
-import BtcIcon from "../assets/btc.svg";
-import EthIcon from "../assets/eth.svg";
-import type { OrderBookSnapshot } from "../types/orderBookTypes";
-import { AssetNames, Symbols } from '../utils/constants';
-import { OrderBookGranularityControls, type OrderBookGranularityControlsProps } from './OrderBookGranularityControls';
 import { useState } from 'react';
+
+import BtcIcon from '../assets/btc.svg';
+import EthIcon from '../assets/eth.svg';
+import { useMobileOrientation } from '../hooks/useMobileOrientation';
+import type { OrderBookSnapshot } from '../types/orderBookTypes';
+import { AssetNames, Symbols } from '../utils/constants';
+import {
+  OrderBookGranularityControls,
+  type OrderBookGranularityControlsProps,
+} from './OrderBookGranularityControls';
 
 export interface HeaderProps extends OrderBookGranularityControlsProps {
   animateOrderBook: boolean;
@@ -26,8 +40,8 @@ const renderSelectOption: SelectProps['renderOption'] = ({ option }) => {
       <Image src={icon} w="32" h="32" />
       <Text>{option.value}-USD</Text>
     </Group>
-  )
-}
+  );
+};
 
 const animateTooltipLabel = `
   What "up"/"down" flash means
@@ -41,29 +55,87 @@ const animateTooltipLabel = `
 
   A price level was deleted or decreased (size shrunk).
   Often interpreted as weaker interest at that level (for bids) or stronger sell urgency (for asks).
-`
+`;
 
 export const Header = ({
-    animateOrderBook,
-    setAnimateOrderBook,
-    snapshot,
-    currentSymbol,
-    setCurrentSymbol,
-    setNSigFigs,
-    nSigFigs,
-    grouping,
-    setGrouping,
+  animateOrderBook,
+  setAnimateOrderBook,
+  snapshot,
+  currentSymbol,
+  setCurrentSymbol,
+  setNSigFigs,
+  nSigFigs,
+  grouping,
+  setGrouping,
 }: HeaderProps) => {
   const currentAssetIcon = AssetIconMap[currentSymbol];
+
+  const { isMobile, orientation } = useMobileOrientation();
   const [isOpen, setIsOpen] = useState(false);
+  const isLandscape = orientation === 'landscape' && isMobile;
+
+  if (isLandscape) {
+    return (
+      <Container className={'header-landscape'}>
+        <Container className={'head-landscape-left-root'}>
+          <Container className="left-section-landscape">
+            <Select
+              className="symbol-select"
+              aria-label="Select Asset"
+              value={currentSymbol}
+              data={Symbols}
+              onDropdownOpen={() => setIsOpen(true)}
+              onDropdownClose={() => setIsOpen(false)}
+              onChange={(value) => {
+                setCurrentSymbol(value ?? 'BTC');
+              }}
+              variant="unstyled"
+              leftSection={<Image src={currentAssetIcon} w="32" h="32" />}
+              styles={{
+                input: {
+                  width: 'auto',
+                  padding: '24px',
+                },
+                section: {
+                  paddingLeft: '24px',
+                  marginRight: '8px',
+                },
+              }}
+              renderOption={renderSelectOption}
+              chevronColor={'goldenrod'}
+              rightSection={
+                isOpen ? (
+                  <IconChevronDown width={16} height={16} />
+                ) : (
+                  <IconChevronUp width={16} height={16} />
+                )
+              }
+            />
+            <Container className="subtitle">
+              {snapshot.isConnected ? 'Live' : 'Disconnected'}
+            </Container>
+          </Container>
+        </Container>
+        <OrderBookGranularityControls
+          currentSymbol={currentSymbol}
+          setCurrentSymbol={setCurrentSymbol}
+          setNSigFigs={setNSigFigs}
+          nSigFigs={nSigFigs}
+          grouping={grouping}
+          setGrouping={setGrouping}
+        />
+      </Container>
+    );
+  }
+
   return (
-    <Container className="header">
-      <Container>
+    <Container className={`header`}>
+      <Container className={'ml-0 px-0'}>
         <Container className="left-section">
           <Container className="inline-flex-container">
             <Switch
               label="Animate order book"
-              labelPosition='left'
+              labelPosition="left"
               checked={animateOrderBook}
               onChange={(event) => setAnimateOrderBook(event.currentTarget.checked)}
             />
@@ -88,36 +160,38 @@ export const Header = ({
               onDropdownOpen={() => setIsOpen(true)}
               onDropdownClose={() => setIsOpen(false)}
               onChange={(value) => {
-                setCurrentSymbol(value ?? "BTC")
+                setCurrentSymbol(value ?? 'BTC');
               }}
               variant="unstyled"
               leftSection={<Image src={currentAssetIcon} w="32" h="32" />}
               styles={{
                 input: {
-                  width: "auto",
+                  width: 'auto',
                   padding: '24px',
                 },
                 section: {
                   paddingLeft: '24px',
                   marginRight: '8px',
-
-                }
+                },
               }}
               renderOption={renderSelectOption}
-              chevronColor={"goldenrod"}
-              rightSection={isOpen ?
-                <IconChevronDown width={16} height={16} /> :
-                <IconChevronUp width={16} height={16} />
+              chevronColor={'goldenrod'}
+              rightSection={
+                isOpen ? (
+                  <IconChevronDown width={16} height={16} />
+                ) : (
+                  <IconChevronUp width={16} height={16} />
+                )
               }
             />
           </Container>
           <Container className="subtitle">
-            {snapshot.isConnected ? "Live" : "Disconnected"}
+            {snapshot.isConnected ? 'Live' : 'Disconnected'}
           </Container>
         </Container>
       </Container>
-      
-      <OrderBookGranularityControls 
+
+      <OrderBookGranularityControls
         currentSymbol={currentSymbol}
         setCurrentSymbol={setCurrentSymbol}
         setNSigFigs={setNSigFigs}
@@ -127,4 +201,4 @@ export const Header = ({
       />
     </Container>
   );
-}
+};

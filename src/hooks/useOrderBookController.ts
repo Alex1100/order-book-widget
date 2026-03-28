@@ -1,5 +1,6 @@
-import { useEffect, useMemo } from "react";
-import { createHyperliquidSocket } from "../socket-connections/hyperliquidSocket";
+import { useEffect, useMemo } from 'react';
+
+import { createHyperliquidSocket } from '../socket-connections/hyperliquidSocket';
 
 export function useOrderBookController(symbol: string, nSigFigs: number, grouping: number) {
   const socket = useMemo(() => createHyperliquidSocket(), []);

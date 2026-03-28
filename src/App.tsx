@@ -1,28 +1,45 @@
-import { Container } from '@mantine/core';
-import { useMemo, useState } from 'react';
-import { Header } from './components/Header';
-import { OrderBook } from './components/OrderBook'
-import { useOrderBook } from './hooks/useOrderBook';
-import { useOrderBookController } from './hooks/useOrderBookController';
 import './App.css';
 
+import { Container, useComputedColorScheme } from '@mantine/core';
+import { useMemo, useState } from 'react';
+
+import { Header } from './components/Header';
+import { OrderBook } from './components/OrderBook';
+import { useMobileOrientation } from './hooks/useMobileOrientation';
+import { useOrderBook } from './hooks/useOrderBook';
+import { useOrderBookController } from './hooks/useOrderBookController';
+
 function App() {
-  const [currentSymbol, setCurrentSymbol] = useState("BTC");
+  const { isMobile, orientation } = useMobileOrientation();
+  const [currentSymbol, setCurrentSymbol] = useState('BTC');
   const [nSigFigs, setNSigFigs] = useState(5);
-  const [grouping, setGrouping] = useState(0.5);
+  const [grouping, setGrouping] = useState(1);
   const [animateOrderBook, setAnimateOrderBook] = useState(true);
+  const computedColorScheme = useComputedColorScheme('dark', { getInitialValueInEffect: true });
 
   useOrderBookController(currentSymbol, nSigFigs, grouping);
 
   const snapshot = useOrderBook();
 
-  const asks = useMemo(() => [...snapshot.asks].reverse(), [snapshot.asks]);
+  /**
+   * Asks (sells) → red — representing selling pressure / supply
+   * Bids (buys) → green — representing buying pressure / demand
+   */
+  const asks = useMemo(() => {
+    if (orientation === 'landscape' && isMobile) {
+      return [...snapshot.asks];
+    }
+    return [...snapshot.asks].reverse();
+  }, [orientation, isMobile, snapshot.asks]);
   const bids = snapshot.bids;
 
   return (
     <>
-      <Container className="card" size="lg">
-        <Header 
+      <Container
+        className={`card${computedColorScheme === 'dark' ? ' dark-mode-card-bg' : ' light-mode-card-bg'}`}
+        size="lg"
+      >
+        <Header
           animateOrderBook={animateOrderBook}
           setAnimateOrderBook={setAnimateOrderBook}
           grouping={grouping}
@@ -36,7 +53,7 @@ function App() {
         <OrderBook asks={asks} bids={bids} snapshot={snapshot} animate={animateOrderBook} />
       </Container>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

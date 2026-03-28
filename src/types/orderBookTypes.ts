@@ -1,8 +1,9 @@
-export type Side = "bids" | "asks";
-export type OrderSide = "bid" | "ask";
-export type RawLevel = {px: string, sz: string; };
+export type Side = 'bids' | 'asks';
+export type OrderSide = 'bid' | 'ask';
+export type RawLevel = { px: string; sz: string };
+export type Listener = () => void;
 
-export type Flash = "up" | "down" | null;
+export type Flash = 'up' | 'down' | null;
 
 export type OrderBookLevel = {
   key: string;
@@ -19,7 +20,7 @@ export type BookLevel = {
   size: number;
   total: number;
   depthRatio: number;
-  flash?: "up" | "down" | null;
+  flash?: 'up' | 'down' | null;
 };
 
 export type OrderBookSnapshot = {
@@ -44,7 +45,7 @@ export type OrderBookConfig = {
 };
 
 export type HyperliquidBookMessage = {
-  channel: "l2Book";
+  channel: 'l2Book';
   data: {
     coin: string;
     levels: RawLevel[][];
