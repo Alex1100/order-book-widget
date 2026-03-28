@@ -1,5 +1,9 @@
 # Order Book Widget App Architecture
 
+https://github.com/user-attachments/assets/6aefaa2c-78c4-42c7-8147-99f0fdb1e5f4
+
+
+
 ## Overview
 
 A real-time cryptocurrency order book widget built with React and Mantine. It connects to the Hyperliquid WebSocket API and renders a live, updating order book with configurable grouping, significant figures, and portrait/landscape layouts.
